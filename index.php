@@ -1,2 +1,10 @@
 <DOCTYPE html>
-    <h1> Здесь будет сайт. </h1>
+<html>
+	<head>
+
+	</head>
+	
+	<body>
+
+	</body>
+</html>
