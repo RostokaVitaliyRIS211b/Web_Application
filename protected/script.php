@@ -1,16 +1,20 @@
 <?php
-function check_letter($letter)
-{
-	return true;
-}
-
-$name = 1;
-while ($name < 33)
-{
-	if (isset($_POST[(string)$name]))
+if (!empty($_POST))	 
 	{
-		echo check_letter($_POST[(string)$id]);
+		$name = 1;
+		$set = false;
+		$gay = $_POST['radio'];
+		while($name<33 && !$set)
+		{
+			if($gay==$name)
+			{
+				$set=true;
+				echo $name;
+			}
+			$name=$name+1;
+		}
+
 	}
-	$name = $name + 1;
-}
+else
+	echo -1;
 ?>
