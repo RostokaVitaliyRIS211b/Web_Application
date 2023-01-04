@@ -1,17 +1,17 @@
 <?php
 if (!empty($_POST))	 
 	{
-		$name = 1;
+		$number = 1;
 		$set = false;
-		$gay = $_POST['radio'];
-		while($name<33 && !$set)
+		$letter_number = $_POST['radio'];
+		while($number < 33 && !$set)
 		{
-			if($gay==$name)
+			if($letter_number == $number)
 			{
 				$set=true;
-				echo $name;
+				echo $number;
 			}
-			$name=$name+1;
+			$number = $number + 1;
 		}
 	}
 else

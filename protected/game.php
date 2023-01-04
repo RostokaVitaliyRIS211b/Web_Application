@@ -1,3 +1,34 @@
+<?php
+function get_rand_pair(&$words_array, &$tips_array)
+{
+    $rand = random_int(0, min(count($words_array), count($tips_array)));
+    $result_array['Word'] = $words_array[$rand];
+    $result_array['Tip'] = $tips_array[$rand];
+    unset($words_array[$rand]);
+    unset($tips_array[$rand]);
+    return $result_array;
+}
+
+$get_wordstips_query = "SELECT * FROM WordsTips";
+$query_result = mysqli_query($db_induction, $get_wordstips_query);
+$words;
+$tips;
+if ($query_result)
+{
+    while ($row = mysqli_fetch_array($query_result))
+    {
+        $words[] = $row['Word'];
+        $tips[] = $row['Tip'];
+    }
+}
+else
+{
+    //cant find game content in database
+}
+
+var_dump(get_rand_pair($words, $tips));
+?>
+
 <DOCTYPE html>
 <html lang="ru">
     <head>
