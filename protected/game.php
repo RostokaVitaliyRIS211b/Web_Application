@@ -1,40 +1,14 @@
-<?php
-function get_rand_pair(&$words_array, &$tips_array)
-{
-    $rand = random_int(0, min(count($words_array), count($tips_array)));
-    $result_array['Word'] = $words_array[$rand];
-    $result_array['Tip'] = $tips_array[$rand];
-    unset($words_array[$rand]);
-    unset($tips_array[$rand]);
-    return $result_array;
-}
-
-$get_wordstips_query = "SELECT * FROM WordsTips";
-$query_result = mysqli_query($db_induction, $get_wordstips_query);
-$words;
-$tips;
-if ($query_result)
-{
-    while ($row = mysqli_fetch_array($query_result))
-    {
-        $words[] = $row['Word'];
-        $tips[] = $row['Tip'];
-    }
-}
-else
-{
-    //cant find game content in database
-}
-
-var_dump(get_rand_pair($words, $tips));
-?>
-
 <DOCTYPE html>
 <html lang="ru">
     <head>
        	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     </head>
     <body>
+        <div class ="WORD">
+            <?php
+                echo $userWord;
+            ?>
+        </div>
         <form class ="Letters" method="POST"> 
             <br><input type = "radio" name = "radio" value = "1" checked="checked"  />
             <br><input type = "radio" name = "radio" value = "2"  />
@@ -71,13 +45,41 @@ var_dump(get_rand_pair($words, $tips));
             <br><input type = "radio" name = "radio" value = "32"  />
             <button type = "submit" name = "submit">Потвердите выбор</button>
         </form>
+        <form class = "Update" method="POST">
+            <button type = "submit" name = "Update">Update</button>
+        </form>
 
-        <div class="mess"></div>
+        <div class="mess"><?php echo 'Количество попыток '; echo $count;?></div>
 
         <script type="text/javascript">
         $('.Letters').submit(function(e) {
+            
             e.preventDefault();
             let m = $('.mess');
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: "/protected/script.php",
+                data: form.serialize(),
+                success: function(x)
+                {
+                    form.find(`:input[value = ${String(x)}]`).prop('disabled',true);
+                    var count = <?php echo $count;?>
+                    count = count - 1;
+                   
+                }//, 
+                /*error: function()
+                {
+                    m.html('error');
+                }*/
+            });
+            <?php
+                
+            ?>
+        });
+        $('.Update').submit(function(e) {
+            e.preventDefault();
+            let m = $('.WORD');
             var form = $(this);
             $.ajax({
                 type: "POST",
