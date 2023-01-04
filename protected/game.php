@@ -48,13 +48,13 @@
             e.preventDefault();
             let m = $('.mess');
             var form = $(this);
-            console.log(form.serialize());
             $.ajax({
                 type: "POST",
                 url: "/protected/script.php",
                 data: form.serialize(),
                 success: function(x)
                 {
+                    form.find(`:input[value = ${String(x)}]`).prop('disabled',true);
                     m.html(String(x));
                 }//, 
                 /*error: function()

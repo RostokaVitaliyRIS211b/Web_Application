@@ -13,7 +13,6 @@ if (!empty($_POST))
 			}
 			$name=$name+1;
 		}
-
 	}
 else
 	echo -1;
