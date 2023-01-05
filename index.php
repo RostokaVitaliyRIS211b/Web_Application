@@ -1,10 +1,15 @@
 <?php
 require_once 'protected/connect_database.php';
+$last_index = -1;
 function get_rand_pair(&$words_array, &$tips_array)
 {
-    $rand = random_int(0, min(count($words_array), count($tips_array)));
+    do
+    {
+        $rand = random_int(0, min(count($words_array), count($tips_array)));    
+    } while($rand == $last_index);
     $result_array['Word'] = $words_array[$rand];
     $result_array['Tip'] = $tips_array[$rand];
+    $last_index = $rand;
     return $result_array;
 }
 function GetUserWord($a)

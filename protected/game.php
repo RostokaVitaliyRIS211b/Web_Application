@@ -2,6 +2,9 @@
 <html lang="ru">
     <head>
        	<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <?php
+        require 'encoding.php';
+        ?>
     </head>
     <body>
         <div class ="WORD">
@@ -10,7 +13,7 @@
             ?>
         </div>
         <form class ="Letters" method="POST"> 
-            <br><input type = "radio" name = "radio" value = "1" checked="checked"  />
+            <br><input type = "radio" name = "radio" value = "1"  />
             <br><input type = "radio" name = "radio" value = "2"  />
             <br><input type = "radio" name = "radio" value = "3"  />
             <br><input type = "radio" name = "radio" value = "4"  />
@@ -42,7 +45,6 @@
             <br><input type = "radio" name = "radio" value = "29"  />
             <br><input type = "radio" name = "radio" value = "30"  />
             <br><input type = "radio" name = "radio" value = "31"  />
-            <br><input type = "radio" name = "radio" value = "32"  />
             <button type = "submit" name = "submit">Потвердите выбор</button>
         </form>
         <form class = "Update" method="POST">
@@ -53,7 +55,6 @@
 
         <script type="text/javascript">
         $('.Letters').submit(function(e) {
-            
             e.preventDefault();
             let m = $('.mess');
             var form = $(this);
@@ -63,10 +64,25 @@
                 data: form.serialize(),
                 success: function(x)
                 {
-                    form.find(`:input[value = ${String(x)}]`).prop('disabled',true);
-                    var count = <?php echo $count;?>
-                    count = count - 1;
-                   
+                    console.log(x);
+                    if (x != -1)
+                    {
+                        var success_result = x.split(' ');
+                        form.find(`:input[value = ${success_result[1]}]`).prop('disabled',true);
+                        form.find(`:input[value = ${success_result[1]}]`).prop('checked',false);
+                        if (success_result[0] == 'true')
+                        {
+                            m.html('такая буква есть в слове');
+                        }
+                        else
+                        {
+                            m.html('такой буквы нет в слове');
+                        } 
+                    }
+                    else
+                    {
+                        m.html('сначала выберите букву');
+                    }                  
                 }//, 
                 /*error: function()
                 {
