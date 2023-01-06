@@ -1,43 +1,27 @@
-<?php
-require_once 'protected/connect_database.php';
-$last_index = -1;
-function get_rand_pair(&$words_array, &$tips_array)
-{
-    do
-    {
-        $rand = random_int(0, min(count($words_array), count($tips_array)));    
-    } while($rand == $last_index);
-    $result_array['Word'] = $words_array[$rand];
-    $result_array['Tip'] = $tips_array[$rand];
-    $last_index = $rand;
-    return $result_array;
-}
-function GetUserWord($a)
-{
-    $num = strlen($a);
-    while($num>0)
-    {
-        echo '*';
-        $num = $num -1;
-    }
-}
-if ($db_induction)
-{
-    $sql1 = "SELECT Word,Tip FROM WordsTips";
-    $result = mysqli_query($db_induction,$sql1);
-    while ($row = mysqli_fetch_array($result)) 
-    {
-        $words[] = $row['Word'];
-        $tips[] = $row['Tip'];
-    }
-    $count = 6;
-    $array = get_rand_pair($words,$tips);
-    $word = $array['Word'];
-    $tip = $array['Tip'];
-    $userWord = GetUserWord($word);
-    include 'protected/game.php';
-}
-else
-{
-    echo '<h1>Error</h1>';
-}
+<!DOCTYPE HTML>
+<html lang="ru">
+    <head>
+        <?php
+        require_once 'protected/connect_database.php';
+        require_once 'protected/script.php';
+        ?>
+        <meta name="viewport" content="width=device-width">
+        <meta charset="utf-8"/>
+        <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <title>Игра Виселица</title>
+    </head>
+
+    <body>
+        <?php
+        try
+        {
+            StartGame($db_induction);
+            include 'protected/game.html';
+        }
+        catch (Exception $e)
+        {
+            echo '<h1 align="center">Error: ' . $e->getMessage() . '</h1>';
+        }
+        ?>
+    </body>
+</html>
