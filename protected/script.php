@@ -111,7 +111,7 @@ function isWin()
             console.log(3333);
             document.getElementById('result').innerHTML =  'ПРОИГРЫШ';
         }
-        document.getElementById('newGame').innerHTML = '<button id = "newGame" onclick = "Update()">Новая игра</button>';
+        document.getElementById('newGame').innerHTML = '<button id = "newgame" onclick = "Update()">Новая игра</button>';
         document.getElementById('userword').innerHTML = String(currentContent['Word']);
 
         DisableButtons();
@@ -175,6 +175,7 @@ function Update()
     attemptCounter = GetAttemptsCount();
     document.getElementById('attempts').innerHTML = attemptCounter;
     document.getElementById('result').innerHTML = String(" ");
+    document.getElementById('newGame').innerHTML = String(" ");
     console.log(currentContent['Word']);
 }
 
