@@ -28,7 +28,11 @@ function StartGame($db_induction)
     	var content = JSON.parse('<?php echo json_encode($array, JSON_UNESCAPED_UNICODE); ?>');
         var lastIndex = -1;
         var currentContent = GetRandPair(content);
-        var userWord = GetUserWord(currentContent['Word']);
+        var userWord = new Array(currentContent['Word'].length);
+        for(var i=0;i<currentContent['Word'].length;++i)
+        {
+            userWord[i] = '*';
+        }
         var isLetter = null;
         console.log(currentContent['Word']);
     </script> 
@@ -58,30 +62,46 @@ function GetRandPair(wordsTipsArray)
     return wordsTipsArray[rand];
 }
 
-function GetUserWord(word)
+function RefreshUserWord(word,letter=null)
 {
-    return "*".repeat(word.length);
+    if(letter)
+    {
+        for (let i = 0; i < word.length; ++i)
+        {
+            if ((currentContent['Word'])[i] == letter)
+            {
+                userWord[i] = letter
+            }
+        }
+    }
+    console.log(userWord.join(" "));
+    return userWord.join(" ");
 }
 
 function CheckLetter(letter)
 {
-	let m = $('.mess');
-	let uw = $('.user_word');
     if (currentContent['Word'].includes(letter))
     {
-        for (let i = 0; i < userWord.length; ++i)
-        {
-            if ((currentContent['Word'])[i] == letter)
-            {
-                userWord[i] = letter;
-            }
-        }
-        m.html("есть буква");
+        document.getElementById('mess').innerHTML='есть буква';
     }
 	else
 	{
-		m.html("нет буквы");
-	}	
+        letter = null;
+        document.getElementById('mess').innerHTML='нет буква';
+	}
+    document.getElementById('userword').innerHTML = RefreshUserWord(currentContent['Word'],letter);	
     console.log("check letter");
+}
+
+function Update()
+{
+    currentContent = GetRandPair(content);
+    userWord = new Array(currentContent['Word'].length);
+    for(var i=0;i<currentContent['Word'].length;++i)
+    {
+       userWord[i] = '*';
+    }
+    document.getElementById('userword').innerHTML =  RefreshUserWord(currentContent['Word'],null);
+    document.getElementById('mess').innerHTML = "";	
 }
 </script>
