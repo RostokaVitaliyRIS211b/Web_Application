@@ -29,6 +29,7 @@ function StartGame($db_induction)
         var lastIndex = -1;
         var currentContent = GetRandPair(content);
         var userWord = GetUserWord(currentContent['Word']);
+        var isLetter = null;
         console.log(currentContent['Word']);
     </script> 
     <?php
@@ -62,8 +63,10 @@ function GetUserWord(word)
     return "*".repeat(word.length);
 }
 
-function check_letter(letter)
+function CheckLetter(letter)
 {
+	let m = $('.mess');
+	let uw = $('.user_word');
     if (currentContent['Word'].includes(letter))
     {
         for (let i = 0; i < userWord.length; ++i)
@@ -73,9 +76,12 @@ function check_letter(letter)
                 userWord[i] = letter;
             }
         }
-        return true;
+        m.html("есть буква");
     }
-
-    return false;
+	else
+	{
+		m.html("нет буквы");
+	}	
+    console.log("check letter");
 }
 </script>

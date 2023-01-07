@@ -1,104 +1,42 @@
 <div class ="user_word"></div>
 <script type="text/javascript">
-    let uw = $('.user_word');
+    var uw = $('.user_word');
     uw.html(userWord);
 </script>
 
-<form class ="Letters" method="POST"> 
-    <br><input type = "radio" name = "radio" value = "1"  />
-    <br><input type = "radio" name = "radio" value = "2"  />
-    <br><input type = "radio" name = "radio" value = "3"  />
-    <br><input type = "radio" name = "radio" value = "4"  />
-    <br><input type = "radio" name = "radio" value = "5"  />
-    <br><input type = "radio" name = "radio" value = "6"  />
-    <br><input type = "radio" name = "radio" value = "7"  />
-    <br><input type = "radio" name = "radio" value = "8"  />
-    <br><input type = "radio" name = "radio" value = "9"  />
-    <br><input type = "radio" name = "radio" value = "10"  />
-    <br><input type = "radio" name = "radio" value = "11"  />
-    <br><input type = "radio" name = "radio" value = "12"  />
-    <br><input type = "radio" name = "radio" value = "13"  />
-    <br><input type = "radio" name = "radio" value = "14"  />
-    <br><input type = "radio" name = "radio" value = "15"  />
-    <br><input type = "radio" name = "radio" value = "16"  />
-    <br><input type = "radio" name = "radio" value = "17"  />
-    <br><input type = "radio" name = "radio" value = "18"  />
-    <br><input type = "radio" name = "radio" value = "19"  />
-    <br><input type = "radio" name = "radio" value = "20"  />
-    <br><input type = "radio" name = "radio" value = "21"  />
-    <br><input type = "radio" name = "radio" value = "22"  />
-    <br><input type = "radio" name = "radio" value = "23"  />
-    <br><input type = "radio" name = "radio" value = "24"  />
-    <br><input type = "radio" name = "radio" value = "25"  />
-    <br><input type = "radio" name = "radio" value = "26"  />
-    <br><input type = "radio" name = "radio" value = "27"  />
-    <br><input type = "radio" name = "radio" value = "28"  />
-    <br><input type = "radio" name = "radio" value = "28"  />
-    <br><input type = "radio" name = "radio" value = "29"  />
-    <br><input type = "radio" name = "radio" value = "30"  />
-    <br><input type = "radio" name = "radio" value = "31"  />
-    <button type = "submit" name = "submit">Потвердите выбор</button>
-</form>
-<form class = "Update" method="POST">
-    <button type = "submit" name = "Update">Update</button>
-</form>
+<div class = "Letters">
+<button id ="1" value = "А" onclick="CheckLetter(value)">А</button>
+<button id ="2" value = "Б" onclick="CheckLetter(value)">Б</button>
+<button id ="3" value = "В" onclick="CheckLetter(value)">В</button>
+<button id ="4" value = "Г" onclick="CheckLetter(value)">Г</button>
+<button id ="5" value = "Д" onclick="CheckLetter(value)">Д</button>
+<button id ="6" value = "Е" onclick="CheckLetter(value)">Е</button>
+<button id ="7" value = "Ж" onclick="CheckLetter(value)">Ж</button>
+<button id ="8" value = "З" onclick="CheckLetter(value)">З</button>
+<button id ="9" value = "И" onclick="CheckLetter(value)">И</button>
+<button id ="10" value = "Й" onclick="CheckLetter(value)">Й</button>
+<button id ="11" value = "К" onclick="CheckLetter(value)">К</button>
+<button id ="12" value = "Л" onclick="CheckLetter(value)">Л</button>
+<button id ="13" value = "М" onclick="CheckLetter(value)">М</button>
+<button id ="14" value = "Н" onclick="CheckLetter(value)">Н</button>
+<button id ="15" value = "О" onclick="CheckLetter(value)">О</button>
+<button id ="16" value = "П" onclick="CheckLetter(value)">П</button>
+<button id ="17" value = "Р" onclick="CheckLetter(value)">Р</button>
+<button id ="18" value = "С" onclick="CheckLetter(value)">С</button>
+<button id ="19" value = "Т" onclick="CheckLetter(value)">Т</button>
+<button id ="20" value = "У" onclick="CheckLetter(value)">У</button>
+<button id ="21" value = "Ф" onclick="CheckLetter(value)">Ф</button>
+<button id ="22" value = "Х" onclick="CheckLetter(value)">Х</button>
+<button id ="23" value = "Ц" onclick="CheckLetter(value)">Ц</button>
+<button id ="24" value = "Ч" onclick="CheckLetter(value)">Ч</button>
+<button id ="25" value = "Ш" onclick="CheckLetter(value)">Ш</button>
+<button id ="26" value = "Щ" onclick="CheckLetter(value)">Щ</button>
+<button id ="27" value = "Ъ" onclick="CheckLetter(value)">Ъ</button>
+<button id ="28" value = "Ы" onclick="CheckLetter(value)">Ы</button>
+<button id ="29" value = "Ь" onclick="CheckLetter(value)">Ь</button>
+<button id ="30" value = "Э" onclick="CheckLetter(value)">Э</button>
+<button id ="31" value = "Ю" onclick="CheckLetter(value)">Ю</button>
+<button id ="32" value = "Я" onclick="CheckLetter(value)">Я</button>
+</div>
 
-<div class="mess"><?php echo 'Количество попыток '; echo $count;?></div>
-
-<script type="text/javascript">
-$('.Letters').submit(function(e) {
-    e.preventDefault();
-    let m = $('.mess');
-    let form = $(this);
-    $.ajax({
-        type: "POST",
-        url: "/protected/script.php",
-        data: form.serialize(),
-        success: function(x)
-        {
-            console.log(x);
-            if (x != -1)
-            {
-                var success_result = x.split(' ');
-                form.find(`:input[value = ${success_result[1]}]`).prop('disabled',true);
-                form.find(`:input[value = ${success_result[1]}]`).prop('checked',false);
-                if (success_result[0] == 'true')
-                {
-                    m.html('такая буква есть в слове');
-                }
-                else
-                {
-                    m.html('такой буквы нет в слове');
-                } 
-            }
-            else
-            {
-                m.html('сначала выберите букву');
-            }                  
-        }//, 
-        /*error: function()
-        {
-            m.html('error');
-        }*/
-    });
-});
-$('.Update').submit(function(e) {
-    e.preventDefault();
-    let m = $('.WORD');
-    var form = $(this);
-    $.ajax({
-        type: "POST",
-        url: "/protected/script.php",
-        data: form.serialize(),
-        success: function(x)
-        {
-            form.find(`:input[value = ${String(x)}]`).prop('disabled',true);
-            m.html(String(x));
-        }//, 
-        /*error: function()
-        {
-            m.html('error');
-        }*/
-    });
-});
-</script>
+<div class="mess"></div>
