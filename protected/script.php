@@ -97,7 +97,26 @@ function MinusAttempt()
 	attemptСounter = attemptСounter - 1;
     document.getElementById('attempts').innerHTML = attemptСounter;
 }
+function isWin()
+{
+    if(attemptСounter == 0 || Result())
+    {
+        if(Result())
+        {
+            console.log(2222);
+            document.getElementById('result').innerHTML = 'ПОБЕДА';
+        }
+        else
+        {
+            console.log(3333);
+            document.getElementById('result').innerHTML =  'ПРОИГРЫШ';
+        }
+        document.getElementById('newGame').innerHTML = '<button id = "newGame" onclick = "Update()">Новая игра</button>';
+        document.getElementById('userword').innerHTML = String(currentContent['Word']);
 
+        DisableButtons();
+    }
+}
 function CheckLetter(buttonId, letter)
 {
     if (currentContent['Word'].includes(letter))
@@ -112,6 +131,7 @@ function CheckLetter(buttonId, letter)
         MinusAttempt();
 	}
     document.getElementById(String(buttonId)).disabled = true;
+    isWin();
 }
 
 function EnableLetters()
@@ -121,7 +141,28 @@ function EnableLetters()
 		document.getElementById(String(i)).disabled = false;
 	}
 }
-
+function DisableButtons()
+{
+    for (let i = 1; i < 33; ++i)
+	{
+		document.getElementById(String(i)).disabled = true;
+	}
+    document.getElementById('submit') .disabled = true;
+}
+function Result()
+{
+    let i = 0;
+    for(let j = 0;j<userWord.length;++j)
+    {
+        if(userWord[i]!='*')
+         ++i;
+    }
+    return i == userWord.length;
+}
+function GetTip()
+{
+    document.getElementById('tip').innerHTML = currentContent['Tip'];
+}
 function Update()
 {
     currentContent = GetRandPair(content);
@@ -129,8 +170,11 @@ function Update()
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
     EnableLetters();
+    document.getElementById('submit') .disabled = false;
+    document.getElementById('tip').innerHTML = '<button id = "Tip" value ="Tip" onclick="GetTip()">Получить подсказку</button>';
     attemptCounter = GetAttemptsCount();
     document.getElementById('attempts').innerHTML = attemptCounter;
+    document.getElementById('result').innerHTML = String(" ");
     console.log(currentContent['Word']);
 }
 
