@@ -28,12 +28,9 @@ function StartGame($db_induction)
     	var content = JSON.parse('<?php echo json_encode($array, JSON_UNESCAPED_UNICODE); ?>');
         var lastIndex = -1;
         var currentContent = GetRandPair(content);
-        var userWord = new Array(currentContent['Word'].length);
-        for(var i=0;i<currentContent['Word'].length;++i)
-        {
-            userWord[i] = '*';
-        }
+        var userWord = InitUserWord();
         var isLetter = null;
+        var attemptСounter = GetAttemptsCount();
         console.log(currentContent['Word']);
     </script> 
     <?php
@@ -55,53 +52,96 @@ function GetRandPair(wordsTipsArray)
     do
     {
         rand = GetRandInt(0, wordsTipsArray.length - 1);    
-    } while(rand == lastIndex);
+    } while(rand === lastIndex);
 
     lastIndex = rand;
 
     return wordsTipsArray[rand];
 }
 
-function RefreshUserWord(word,letter=null)
+function InitUserWord()
 {
-    if(letter)
+	let uw = new Array(currentContent['Word'].length);
+    for(let i = 0; i < currentContent['Word'].length; ++i)
     {
-        for (let i = 0; i < word.length; ++i)
+       uw[i] = '*';
+    }
+    return uw;
+}
+
+function RefreshUserWord(letter=null)
+{
+    if (letter)
+    {
+        for (let i = 0; i < currentContent['Word'].length; ++i)
         {
-            if ((currentContent['Word'])[i] == letter)
+            if ((currentContent['Word'])[i] === letter)
             {
-                userWord[i] = letter
+                userWord[i] = letter;
             }
         }
     }
-    console.log(userWord.join(" "));
-    return userWord.join(" ");
+    else
+    {
+    	userWord = InitUserWord();
+    }
 }
 
-function CheckLetter(letter)
+function ChArrayToString(array)
+{
+	return array.join(" ");
+}
+
+function MinusAttempt()
+{
+	attemptСounter = attemptСounter - 1;
+    document.getElementById('attempts').innerHTML = attemptСounter;
+}
+
+function CheckLetter(buttonId, letter)
 {
     if (currentContent['Word'].includes(letter))
     {
-        document.getElementById('mess').innerHTML='есть буква';
+        document.getElementById('mess').innerHTML='есть буква ' + letter;
+        RefreshUserWord(letter);
+        document.getElementById('userword').innerHTML = ChArrayToString(userWord);	
     }
 	else
 	{
-        letter = null;
-        document.getElementById('mess').innerHTML='нет буква';
+        document.getElementById('mess').innerHTML='нет буква ' + letter;
+        MinusAttempt();
 	}
-    document.getElementById('userword').innerHTML = RefreshUserWord(currentContent['Word'],letter);	
-    console.log("check letter");
+    document.getElementById(String(buttonId)).disabled = true;
+}
+
+function EnableLetters()
+{
+	for (let i = 1; i < 33; ++i)
+	{
+		document.getElementById(String(i)).disabled = false;
+	}
 }
 
 function Update()
 {
     currentContent = GetRandPair(content);
-    userWord = new Array(currentContent['Word'].length);
-    for(var i=0;i<currentContent['Word'].length;++i)
-    {
-       userWord[i] = '*';
-    }
-    document.getElementById('userword').innerHTML =  RefreshUserWord(currentContent['Word'],null);
+    RefreshUserWord(null);
+    document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
+    EnableLetters();
+    attemptCounter = GetAttemptsCount();
+    document.getElementById('attempts').innerHTML = attemptCounter;
+    console.log(currentContent['Word']);
+}
+
+function countUniqChars(str) 
+{
+  return new Set(str.split('')).size;
+}
+
+function GetAttemptsCount()
+{
+	console.log(countUniqChars(currentContent['Word']) + " * 1.5 = " + Math.ceil(currentContent['Word'].length * 1.5));
+	return Math.ceil(countUniqChars(currentContent['Word']) * 1.5);
 }
 </script>
