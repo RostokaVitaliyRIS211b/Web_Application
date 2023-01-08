@@ -42,7 +42,7 @@ function GetRandInt(min, max)//inclusive min and exclusive max
 {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 function GetRandPair()
