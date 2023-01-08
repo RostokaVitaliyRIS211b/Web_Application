@@ -42,13 +42,32 @@ function StartGame($db_induction)
         var userWord = InitUserWord();
         var isLetter = null;
         var attemptСounter = GetAttemptsCount();
-        console.log(currentContent['Word']);
+        var curCont = RandContentQuery(-1);
+        console.log(curCont);
     </script> 
     <?php
 }
 ?>
 
 <script>
+function RandContentQuery(currentId)
+{
+    var IdLength;
+    console.log("ajax");
+    $.ajax(
+    {
+        async: false,
+        type: "POST",
+        url: './API.php',
+        data: {randWord: " ", curId: currentId},
+        success: function(json)
+        {
+            IdLength = JSON.parse(json);
+        }
+    });
+    return IdLength;
+}
+
 function GetRandInt(min, max)//inclusive min and exclusive max
 {
     min = Math.ceil(min);
@@ -80,7 +99,7 @@ function InitUserWord()
     return uw;
 }
 
-function RefreshUserWord(letter = null)
+function RefreshContentWord(letter = null)
 {
     if (letter)
     {
@@ -145,7 +164,7 @@ function CheckLetter(buttonId, letter)
     if (currentContent['Word'].includes(letter))
     {
         document.getElementById('mess').innerHTML='есть буква ' + letter;
-        RefreshUserWord(letter);
+        RefreshContentWord(letter);
         document.getElementById('userword').innerHTML = ChArrayToString(userWord);	
     }
 	else
@@ -203,7 +222,7 @@ function GetTip()
 function Update()
 {
     currentContent = GetRandPair(content);
-    RefreshUserWord(null);
+    RefreshContentWord(null);
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
     EnableButtons();
