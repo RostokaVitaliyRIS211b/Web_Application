@@ -211,6 +211,7 @@ function countUniqChars(str)
 
 function GetAttemptsCount()
 {
-	return Math.ceil(countUniqChars(currentContent['Word']) * 1.5);
+	//return Math.ceil(countUniqChars(currentContent['Word']) * 1.5);
+    return 8;
 }
 </script>
