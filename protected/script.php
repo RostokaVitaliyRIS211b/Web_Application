@@ -20,9 +20,19 @@ function GetGameContent($db_induction)
     return $WordsTips;
 }
 
+function EncodeArray(&$array)
+{
+    for ($i = 0; $i < count($array); ++$i)
+    {
+        ($array[$i])['Word'] = encodeStringCir(($array[$i])['Word'], 1);
+        ($array[$i])['Tip'] = encodeStringCir(($array[$i])['Tip'], 1);
+    }
+}
+
 function StartGame($db_induction)
 {
 	$array = GetGameContent($db_induction);
+    EncodeArray($array);
 	?>
     <script>
     	var content = JSON.parse('<?php echo json_encode($array, JSON_UNESCAPED_UNICODE); ?>');
