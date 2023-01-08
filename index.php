@@ -15,7 +15,7 @@
         <?php
         try
         {
-            StartGame($db_induction);
+            StartGame();
             include 'protected/game.html';
         }
         catch (Exception $e)

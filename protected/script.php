@@ -1,92 +1,35 @@
 <?php
-require_once 'protected/code.php';
-function GetGameContent($db_induction)
+
+function StartGame()
 {
-	if (!$db_induction)
-		throw new Exception("Ошибка подключения к базе данных.");
-		
-	$sql_query = "SELECT * FROM WordsTips";
-    $query_result = mysqli_query($db_induction, $sql_query);
-
-    if (!$query_result)
-    	throw new Exception('Ошибка получения данных.');
-
-    $WordsTips;
-    while ($row = mysqli_fetch_array($query_result))
-    {
-        $word_tip['Word'] = $row['Word'];
-        $word_tip['Tip'] = $row['Tip'];
-        $WordsTips[] = $word_tip;
-    }
-    return $WordsTips;
-}
-
-function EncodeArray(&$array)
-{
-    for ($i = 0; $i < count($array); ++$i)
-    {
-        ($array[$i])['Word'] = encodeStringCyr(($array[$i])['Word'], 1);
-        ($array[$i])['Tip'] = encodeStringCyr(($array[$i])['Tip'], 1);
-    }
-}
-
-function StartGame($db_induction)
-{
-	$array = GetGameContent($db_induction);
-    EncodeArray($array);
 	?>
     <script>
-    	var content = JSON.parse('<?php echo json_encode($array, JSON_UNESCAPED_UNICODE); ?>');
-        var lastIndex = -1;
-        var currentContent = GetRandPair(content); 
+        var currentContent;
+        GetRandomContent(); 
         var userWord = InitUserWord();
-        var isLetter = null;
         var attemptСounter = GetAttemptsCount();
-        var curCont = RandContentQuery(-1);
-        console.log(curCont);
     </script> 
     <?php
 }
 ?>
 
 <script>
-function RandContentQuery(currentId)
+function GetRandomContent()
 {
-    var IdLength;
     console.log("ajax");
     $.ajax(
     {
         async: false,
         type: "POST",
         url: './API.php',
-        data: {randWord: " ", curId: currentId},
+        data: {randWord: " ", randTip: " "},
         success: function(json)
         {
-            IdLength = JSON.parse(json);
+            currentContent = JSON.parse(json);
+            console.log(currentContent['Word']);
+            console.log(currentContent['Tip']);
         }
     });
-    return IdLength;
-}
-
-function GetRandInt(min, max)//inclusive min and exclusive max
-{
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
-}
-
-function GetRandPair()
-{
-    let rand = -1;
-
-    do
-    {
-        rand = GetRandInt(0, content.length);    
-    } while(rand === lastIndex);
-
-    lastIndex = rand;
-
-    return content[rand];
 }
 
 function InitUserWord()
@@ -136,8 +79,6 @@ function IsWin()
         {
             //console.log(2222);
             document.getElementById('result').innerHTML = 'ПОБЕДА';
-            content.splice(lastIndex, 1);
-            console.log(content);
         }
         else
         {
@@ -146,15 +87,7 @@ function IsWin()
         }
 
         DisableButtons();
-
-        if (content.length !== 0)
-        {
-            document.getElementById('newGame').innerHTML = '<button id = "newgame" onclick = "Update()">Новая игра</button>';
-        }
-        else
-        {
-            document.getElementById('result').innerHTML += ' ВЫ УГАДАЛИ ВСЕ СЛОВА';
-        }
+        document.getElementById('newGame').innerHTML = '<button id = "newgame" onclick = "Update()">Новая игра</button>';
         //document.getElementById('userword').innerHTML = String(currentContent['Word']);
     }
 }
@@ -221,7 +154,7 @@ function GetTip()
 
 function Update()
 {
-    currentContent = GetRandPair(content);
+    GetRandomContent();
     RefreshContentWord(null);
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
