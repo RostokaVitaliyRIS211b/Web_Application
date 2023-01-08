@@ -38,11 +38,11 @@ function StartGame($db_induction)
 ?>
 
 <script>
-function GetRandInt(min, max)
+function GetRandInt(min, max)//inclusive min and exclusive max
 {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function GetRandPair()
@@ -51,7 +51,7 @@ function GetRandPair()
 
     do
     {
-        rand = GetRandInt(0, content.length - 1);    
+        rand = GetRandInt(0, content.length);    
     } while(rand === lastIndex);
 
     lastIndex = rand;
