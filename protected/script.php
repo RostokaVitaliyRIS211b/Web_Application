@@ -34,7 +34,6 @@ function GetRandomContent(currentId)
 function RefreshUserWord(letter = null, positions = null)
 {
     let uw;
-    console.log(uw);
     if (letter !== null && positions !== null)
     {
         uw = userWord;
@@ -46,12 +45,10 @@ function RefreshUserWord(letter = null, positions = null)
     else
     {
         uw = new Array(currentContent['Length']);
-        console.log(uw);
         for(let i = 0; i < uw.length; ++i)
         {
            uw[i] = '*';
         }
-        console.log(uw);
     }
     return uw;
 }
@@ -67,24 +64,40 @@ function MinusAttempt()
     document.getElementById('attempts').innerHTML = attemptСounter;
 }
 
+function GetWord(currentId)
+{
+    var word;
+    $.ajax(
+    {
+        async: false,
+        type: "POST",
+        url: './API.php',
+        data: {Word: " ", curId: currentId},
+        success: function(json)
+        {
+            word = JSON.parse(json);
+        }
+    });
+    return word;
+}
+
 function IsWin()
 {
     if (attemptСounter == 0 || IsAnswer())
     {
         if (IsAnswer())
         {
-            //console.log(2222);
             document.getElementById('result').innerHTML = 'ПОБЕДА';
         }
         else
         {
-            //console.log(3333);
-            document.getElementById('result').innerHTML = 'ПРОИГРЫШ Было загадано слово: ' + currentContent['Word'];
+            document.getElementById('result').innerHTML = 
+                'ПРОИГРЫШ Было загадано слово: ' + GetWord(currentContent['Id']);
         }
 
-        DisableButtons();
-        document.getElementById('newGame').innerHTML = '<button id = "newgame" onclick = "Update()">Новая игра</button>';
-        //document.getElementById('userword').innerHTML = String(currentContent['Word']);
+        DisableLetters();
+        document.getElementById('newGame').innerHTML = 
+            '<button id = "newgame" onclick = "Update()">Новая игра</button>';
     }
 }
 
@@ -181,22 +194,16 @@ function ShowTip()
 
 function Update()
 {
-    GetRandomContent();
-    RefreshContentWord(null);
+    currentContent = GetRandomContent(currentContent["Id"]); 
+    userWord = RefreshUserWord(null, null);
+    attemptСounter = GetAttemptsCount();
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
     EnableButtons();
-    document.getElementById('tip').innerHTML = '<button id = "Tip" value ="Tip" onclick="GetTip()">Получить подсказку</button>';
-    attemptCounter = GetAttemptsCount();
+    document.getElementById('tip').innerHTML = '<button id = "Tip" value ="Tip" onclick="ShowTip()">Получить подсказку</button>';
     document.getElementById('attempts').innerHTML = attemptCounter;
     document.getElementById('result').innerHTML = String(" ");
     document.getElementById('newGame').innerHTML = String(" ");
-    console.log(currentContent['Word']);
-}
-
-function countUniqChars(str) 
-{
-  return new Set(str.split('')).size;
 }
 
 function GetAttemptsCount()

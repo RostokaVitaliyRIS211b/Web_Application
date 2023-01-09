@@ -83,4 +83,9 @@ if (isset($_POST['Tip']) && isset($_POST['curId']))
 {
     echo json_encode(GetTipById($db_induction, $_POST['curId']), JSON_UNESCAPED_UNICODE);
 }
+
+if (isset($_POST['Word']) && isset($_POST['curId']))
+{
+    echo json_encode(GetWordById($db_induction, $_POST['curId']));
+}
 ?>
