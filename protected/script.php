@@ -154,12 +154,6 @@ function DisableLetters()
     }
 }
 
-function DisableButtons()
-{
-    DisableLetters();
-    document.getElementById('submit').disabled = true;
-}
-
 function IsAnswer()
 {
     let i = 0;
