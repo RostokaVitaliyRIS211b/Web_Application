@@ -26,6 +26,7 @@ function GetRandomContent(currentId)
         success: function(json)
         {
             IdLength = JSON.parse(json);
+            IdLength['Length'] = parseInt(IdLength['Length']);
         }
     });
     return IdLength;
@@ -34,6 +35,7 @@ function GetRandomContent(currentId)
 function RefreshUserWord(letter = null, positions = null)
 {
     let uw;
+    console.log(uw);
     if (letter !== null && positions !== null)
     {
         uw = userWord;
@@ -45,10 +47,12 @@ function RefreshUserWord(letter = null, positions = null)
     else
     {
         uw = new Array(currentContent['Length']);
+        console.log(uw);
         for(let i = 0; i < uw.length; ++i)
         {
            uw[i] = '*';
         }
+        console.log(uw);
     }
     return uw;
 }
@@ -91,7 +95,7 @@ function CheckLetter(buttonId, letter)
     $.ajax(
     {
         async: false,
-        type: "POST",
+        type: "GET",
         url: './API.php',
         data: {letter: letter, curId: currentContent['Id']},
         success: function(json)
@@ -100,7 +104,7 @@ function CheckLetter(buttonId, letter)
         }
     });
     
-    if (positions.length > 0)
+    if (positions.length !== 0)
     {
         userWord = RefreshUserWord(letter, positions);
         document.getElementById('mess').innerHTML='есть буква ' + letter;

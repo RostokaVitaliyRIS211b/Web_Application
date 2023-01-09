@@ -27,4 +27,39 @@ if (isset($_POST['randWord']) && isset($_POST['curId']))
 {
     echo json_encode(GetRandContent($db_induction, $_POST['curId']), JSON_UNESCAPED_UNICODE);
 }
+
+function GetWordById($db_induction, $wordId)
+{
+    if (!$db_induction)
+        throw new Exception("Ошибка подключения к базе данных.");
+
+    $sql_query = "SELECT Word FROM WordsTips WHERE Id = " . $wordId . " LIMIT 1;";
+
+    $query_result = mysqli_query($db_induction, $sql_query);
+
+    if (!$query_result)
+        throw new Exception('Ошибка получения данных.');
+
+    $word = mysqli_fetch_assoc($query_result);
+    return $word['Word'];
+}
+
+function CheckCyrLetter($letter, $word)
+{
+    $letterOrd = ord($letter[1]);
+    $positions = array();
+    for ($i = 1; $i < strlen($word); $i+=2)
+    {
+        if ($letterOrd === ord($word[$i]))
+        {
+            $positions[] = ($i - 1) / 2;
+        }
+    }
+    return $positions;
+}
+
+if (isset($_GET['letter']) && isset($_GET['curId']))
+{
+    echo json_encode(CheckCyrLetter($_GET['letter'], GetWordById($db_induction, $_GET['curId'])));
+}
 ?>
