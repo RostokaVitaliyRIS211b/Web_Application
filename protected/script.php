@@ -5,7 +5,7 @@ function StartGame()
 	?>
     <script>
         var currentContent = GetRandomContent(-1); 
-        var userWord = RefreshUserWord(currentContent['Length']);
+        var userWord = RefreshUserWord(null, null);
         var attemptСounter = GetAttemptsCount();
     </script> 
     <?php
@@ -31,32 +31,26 @@ function GetRandomContent(currentId)
     return IdLength;
 }
 
-function RefreshUserWord(wordLength)
+function RefreshUserWord(letter = null, positions = null)
 {
-	let uw = new Array(wordLength);
-    for(let i = 0; i < uw.length; ++i)
+    let uw;
+    if (letter !== null && positions !== null)
     {
-       uw[i] = '*';
-    }
-    return uw;
-}
-
-function RefreshContentWord(letter = null)
-{
-    if (letter)
-    {
-        for (let i = 0; i < currentContent['Word'].length; ++i)
+        uw = userWord;
+        for (let i = 0; i < positions.length; ++i)
         {
-            if ((currentContent['Word'])[i] === letter)
-            {
-                userWord[i] = letter;
-            }
+            uw[positions[i]] = letter;
         }
     }
     else
     {
-    	userWord = RefreshUserWord();
+        uw = new Array(currentContent['Length']);
+        for(let i = 0; i < uw.length; ++i)
+        {
+           uw[i] = '*';
+        }
     }
+    return uw;
 }
 
 function ChArrayToString(array)
@@ -93,17 +87,31 @@ function IsWin()
 
 function CheckLetter(buttonId, letter)
 {
-    if (currentContent['Word'].includes(letter))
+    var positions;
+    $.ajax(
     {
+        async: false,
+        type: "POST",
+        url: './API.php',
+        data: {letter: letter, curId: currentContent['Id']},
+        success: function(json)
+        {
+            positions = JSON.parse(json);
+        }
+    });
+    
+    if (positions.length > 0)
+    {
+        userWord = RefreshUserWord(letter, positions);
         document.getElementById('mess').innerHTML='есть буква ' + letter;
-        RefreshContentWord(letter);
-        document.getElementById('userword').innerHTML = ChArrayToString(userWord);	
+        document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     }
-	else
-	{
-        document.getElementById('mess').innerHTML='нет буква ' + letter;
+    else
+    {
         MinusAttempt();
-	}
+        document.getElementById('mess').innerHTML='нет буква ' + letter;
+    }
+
     document.getElementById(String(buttonId)).disabled = true;
     IsWin();
 }
