@@ -58,8 +58,29 @@ function CheckCyrLetter($letter, $word)
     return $positions;
 }
 
-if (isset($_GET['letter']) && isset($_GET['curId']))
+if (isset($_POST['letter']) && isset($_POST['curId']))
 {
-    echo json_encode(CheckCyrLetter($_GET['letter'], GetWordById($db_induction, $_GET['curId'])));
+    echo json_encode(CheckCyrLetter($_POST['letter'], GetWordById($db_induction, $_POST['curId'])));
+}
+
+function GetTipById($db_induction, $Id)
+{
+    if (!$db_induction)
+        throw new Exception("Ошибка подключения к базе данных.");
+
+    $sql_query = "SELECT Tip FROM WordsTips WHERE Id = " . $Id . " LIMIT 1;";
+
+    $query_result = mysqli_query($db_induction, $sql_query);
+
+    if (!$query_result)
+        throw new Exception('Ошибка получения данных.');
+
+    $word = mysqli_fetch_assoc($query_result);
+    return $word['Tip'];
+}
+
+if (isset($_POST['Tip']) && isset($_POST['curId']))
+{
+    echo json_encode(GetTipById($db_induction, $_POST['curId']), JSON_UNESCAPED_UNICODE);
 }
 ?>

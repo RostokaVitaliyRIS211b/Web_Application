@@ -16,7 +16,6 @@ function StartGame()
 function GetRandomContent(currentId)
 {
     var IdLength;
-    console.log("ajax");
     $.ajax(
     {
         async: false,
@@ -95,7 +94,7 @@ function CheckLetter(buttonId, letter)
     $.ajax(
     {
         async: false,
-        type: "GET",
+        type: "POST",
         url: './API.php',
         data: {letter: letter, curId: currentContent['Id']},
         success: function(json)
@@ -158,9 +157,26 @@ function IsAnswer()
     return i === userWord.length;
 }
 
-function GetTip()
+function GetTip(currentId)
 {
-    document.getElementById('tip').innerHTML = currentContent['Tip'];
+    var Tip;
+    $.ajax(
+    {
+        async: false,
+        type: "POST",
+        url: './API.php',
+        data: {Tip: " ", curId: currentId},
+        success: function(json)
+        {
+            Tip = JSON.parse(json);
+        }
+    });
+    return Tip;
+}
+
+function ShowTip()
+{
+    document.getElementById('tip').innerHTML = GetTip(currentContent['Id']);
 }
 
 function Update()
