@@ -4,8 +4,7 @@ function StartGame()
 {
 	?>
     <script>
-        var currentContent;
-        GetRandomContent(); 
+        var currentContent = GetRandomContent(-1); 
         var userWord = InitUserWord();
         var attemptСounter = GetAttemptsCount();
     </script> 
@@ -14,22 +13,22 @@ function StartGame()
 ?>
 
 <script>
-function GetRandomContent()
+function GetRandomContent(currentId)
 {
+    var IdLength;
     console.log("ajax");
     $.ajax(
     {
         async: false,
         type: "POST",
         url: './API.php',
-        data: {randWord: " ", randTip: " "},
+        data: {randWord: " ", curId: currentId},
         success: function(json)
         {
-            currentContent = JSON.parse(json);
-            console.log(currentContent['Word']);
-            console.log(currentContent['Tip']);
+            IdLength = JSON.parse(json);
         }
     });
+    return IdLength;
 }
 
 function InitUserWord()
