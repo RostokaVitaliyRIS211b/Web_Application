@@ -1,5 +1,4 @@
 <?php
-require 'protected/code.php';
 require 'protected/connect_database.php';
 
 function GetRandContent($db_induction, $except)

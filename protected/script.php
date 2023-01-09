@@ -5,7 +5,7 @@ function StartGame()
 	?>
     <script>
         var currentContent = GetRandomContent(-1); 
-        var userWord = InitUserWord();
+        var userWord = RefreshUserWord(currentContent['Length']);
         var attemptСounter = GetAttemptsCount();
     </script> 
     <?php
@@ -31,10 +31,10 @@ function GetRandomContent(currentId)
     return IdLength;
 }
 
-function InitUserWord()
+function RefreshUserWord(wordLength)
 {
-	let uw = new Array(currentContent['Word'].length);
-    for(let i = 0; i < currentContent['Word'].length; ++i)
+	let uw = new Array(wordLength);
+    for(let i = 0; i < uw.length; ++i)
     {
        uw[i] = '*';
     }
@@ -55,7 +55,7 @@ function RefreshContentWord(letter = null)
     }
     else
     {
-    	userWord = InitUserWord();
+    	userWord = RefreshUserWord();
     }
 }
 
