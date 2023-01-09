@@ -13,15 +13,8 @@
 
     <body>
         <?php
-        try
-        {
-            StartGame();
-            include 'protected/game.html';
-        }
-        catch (Exception $e)
-        {
-            echo '<h1 align="center">Error: ' . $e->getMessage() . '</h1>';
-        }
+        StartGame();
+        include 'protected/game.html';
         ?>
     </body>
 </html>

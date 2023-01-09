@@ -1,9 +1,17 @@
 <?php
+require 'protected/exceptions.php';
+
+function GetExceptions()
+{
+    return array(0 => CONN_ERR, 1 => RETR_ERR);
+}
 
 function StartGame()
 {
+    $exceptions = GetExceptions();
 	?>
     <script>
+        var exceptions = JSON.parse('<?php echo json_encode($exceptions, JSON_UNESCAPED_UNICODE); ?>');
         var currentContent = GetRandomContent(-1); 
         var userWord = RefreshUserWord(null, null);
         var attemptСounter = GetAttemptsCount();
@@ -25,6 +33,10 @@ function GetRandomContent(currentId)
         success: function(json)
         {
             IdLength = JSON.parse(json);
+            if (typeof IdLength === "string" && exceptions.includes(IdLength))
+            {
+                window.location.replace(IdLength + ".html");
+            }
             IdLength['Length'] = parseInt(IdLength['Length']);
         }
     });
@@ -76,6 +88,10 @@ function GetWord(currentId)
         success: function(json)
         {
             word = JSON.parse(json);
+            if (typeof word === "string" && exceptions.includes(word))
+            {
+                window.location.replace(word + ".html");
+            }
         }
     });
     return word;
@@ -113,6 +129,10 @@ function CheckLetter(buttonId, letter)
         success: function(json)
         {
             positions = JSON.parse(json);
+            if (typeof positions === "string" && exceptions.includes(positions))
+            {
+                window.location.replace(positions + ".html");
+            }
         }
     });
     
@@ -143,7 +163,7 @@ function EnableLetters()
 function EnableButtons()
 {
     EnableLetters();
-    document.getElementById('submit').disabled = false;
+    document.getElementById('update').disabled = false;
 }
 
 function DisableLetters()
@@ -176,6 +196,10 @@ function GetTip(currentId)
         success: function(json)
         {
             Tip = JSON.parse(json);
+            if (typeof Tip === "string" && exceptions.includes(Tip))
+            {
+                window.location.replace(Tip + ".html");
+            }
         }
     });
     return Tip;
@@ -188,14 +212,15 @@ function ShowTip()
 
 function Update()
 {
-    currentContent = GetRandomContent(currentContent["Id"]); 
+    currentContent = GetRandomContent(currentContent['Id']); 
     userWord = RefreshUserWord(null, null);
     attemptСounter = GetAttemptsCount();
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
     EnableButtons();
-    document.getElementById('tip').innerHTML = '<button id = "Tip" value ="Tip" onclick="ShowTip()">Получить подсказку</button>';
-    document.getElementById('attempts').innerHTML = attemptCounter;
+    document.getElementById('tip').innerHTML = 
+        '<button id = "Tip" value ="Tip" onclick="ShowTip()">Получить подсказку</button>';
+    document.getElementById('attempts').innerHTML = attemptСounter;
     document.getElementById('result').innerHTML = String(" ");
     document.getElementById('newGame').innerHTML = String(" ");
 }
