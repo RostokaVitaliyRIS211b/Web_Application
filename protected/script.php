@@ -14,7 +14,7 @@ function StartGame()
         var exceptions = JSON.parse('<?php echo json_encode($exceptions, JSON_UNESCAPED_UNICODE); ?>');
         var currentContent = GetRandomContent(-1); 
         var userWord = RefreshUserWord(null, null);
-        var attemptСounter = GetAttemptsCount();
+        var attemptСounter = RefreshAttemptsCount();
     </script> 
     <?php
 }
@@ -70,12 +70,6 @@ function ChArrayToString(array)
 	return array.join(" ");
 }
 
-function MinusAttempt()
-{
-	attemptСounter = attemptСounter - 1;
-    document.getElementById('attempts').innerHTML = attemptСounter;
-}
-
 function GetWord(currentId)
 {
     var word;
@@ -99,7 +93,7 @@ function GetWord(currentId)
 
 function IsWin()
 {
-    if (attemptСounter == 0 || IsAnswer())
+    if (attemptСounter.NonWritable === 0 || IsAnswer())
     {
         if (IsAnswer())
         {
@@ -214,20 +208,41 @@ function Update()
 {
     currentContent = GetRandomContent(currentContent['Id']); 
     userWord = RefreshUserWord(null, null);
-    attemptСounter = GetAttemptsCount();
+    attemptСounter = RefreshAttemptsCount();
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
     EnableButtons();
     document.getElementById('tip').innerHTML = 
         '<button id = "Tip" value ="Tip" onclick="ShowTip()">Получить подсказку</button>';
-    document.getElementById('attempts').innerHTML = attemptСounter;
+    document.getElementById('attempts').innerHTML = attemptСounter.NonWritable;
     document.getElementById('result').innerHTML = String(" ");
     document.getElementById('newGame').innerHTML = String(" ");
 }
 
-function GetAttemptsCount()
+function MinusAttempt()
 {
-	//return Math.ceil(countUniqChars(currentContent['Word']) * 1.5);
-    return 8;
+    var obj = { };
+    Object.defineProperty(obj, 'NonWritable', 
+        {
+            value: attemptСounter.NonWritable - 1,
+            writable : false,
+            enumerable : true,
+            configurable : false
+        });
+    attemptСounter = obj;
+    document.getElementById('attempts').innerHTML = attemptСounter.NonWritable;
+}
+
+function RefreshAttemptsCount()
+{
+    var obj = { };
+    Object.defineProperty(obj, 'NonWritable', 
+        {
+            value: 8,
+            writable : false,
+            enumerable : true,
+            configurable : false
+        });
+    return obj;
 }
 </script>
