@@ -105,7 +105,7 @@ function IsWin()
                 'ПРОИГРЫШ Было загадано слово: ' + GetWord(currentContent['Id']);
         }
 
-        DisableLetters();
+        DisableButtons();
         document.getElementById('newGame').innerHTML = 
             '<button id = "newgame" onclick = "Update()">Новая игра</button>';
     }
@@ -166,6 +166,12 @@ function DisableLetters()
     {
         document.getElementById(String(i)).disabled = true;
     }
+}
+
+function DisableButtons()
+{
+    DisableLetters();
+    document.getElementById('update').disabled = true;
 }
 
 function IsAnswer()
