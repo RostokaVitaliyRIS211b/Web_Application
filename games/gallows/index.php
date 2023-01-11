@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width">
         <meta charset="utf-8"/>
         <title>Игра Виселица</title>
+        <link href="stylegame.css" rel="stylesheet" >
     </head>
 
     <body>
