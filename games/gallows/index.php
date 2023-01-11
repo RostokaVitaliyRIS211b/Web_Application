@@ -12,7 +12,7 @@
         <link href="stylegame.css" rel="stylesheet" >
     </head>
 
-    <body>
+    <body background="images/content/Screen.JPG">
         <?php
         StartGame();
         include 'protected/game.html';

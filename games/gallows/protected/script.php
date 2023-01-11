@@ -107,7 +107,7 @@ function IsWin()
 
         DisableButtons();
         document.getElementById('newGame').innerHTML = 
-            '<button id = "newgame" onclick = "Update()">Новая игра</button>';
+            '<input type="image" src="images/content/newgame.JPG" class="newgame" id="newgame" onclick = "Update()">';
     }
 }
 
@@ -143,6 +143,7 @@ function CheckLetter(buttonId, letter)
     }
 
     document.getElementById(String(buttonId)).disabled = true;
+    document.getElementById(String(buttonId)).src = "images/content/Screen.JPG";
     IsWin();
 }
 
@@ -151,6 +152,7 @@ function EnableLetters()
 	for (let i = 1; i < 33; ++i)
 	{
 		document.getElementById(String(i)).disabled = false;
+        document.getElementById(String(i)).src = "images/letters/" + i + ".JPG";
 	}
 }
 
@@ -158,6 +160,7 @@ function EnableButtons()
 {
     EnableLetters();
     document.getElementById('update').disabled = false;
+    document.getElementById('update').src = "images/content/newword.JPG";
 }
 
 function DisableLetters()
@@ -165,6 +168,7 @@ function DisableLetters()
     for (let i = 1; i < 33; ++i)
     {
         document.getElementById(String(i)).disabled = true;
+        document.getElementById(String(i)).src = "images/content/Screen.JPG";
     }
 }
 
@@ -172,6 +176,7 @@ function DisableButtons()
 {
     DisableLetters();
     document.getElementById('update').disabled = true;
+    document.getElementById('update').src = "images/content/Screen.JPG";
 }
 
 function IsAnswer()
@@ -207,7 +212,7 @@ function GetTip(currentId)
 
 function ShowTip()
 {
-    document.getElementById('tip').innerHTML = GetTip(currentContent['Id']);
+    document.getElementById('tip').innerHTML = 'ПОДСКАЗКА:<br>' + GetTip(currentContent['Id']);
 }
 
 function Update()
@@ -219,7 +224,7 @@ function Update()
     document.getElementById('mess').innerHTML = "";	
     EnableButtons();
     document.getElementById('tip').innerHTML = 
-        '<button id = "Tip" value ="Tip" onclick="ShowTip()">Получить подсказку</button>';
+        '<input type="image" src="images/content/tip.JPG" class="ttt" id="Tip" value="Tip" onclick="ShowTip()">';
     document.getElementById('attempts').innerHTML = attemptСounter.NonWritable;
     document.getElementById('result').innerHTML = String(" ");
     document.getElementById('newGame').innerHTML = String(" ");
