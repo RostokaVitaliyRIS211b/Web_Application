@@ -14,7 +14,6 @@ function StartGame()
         var exceptions = JSON.parse('<?php echo json_encode($exceptions, JSON_UNESCAPED_UNICODE); ?>');
         var currentContent = GetRandomContent(-1); 
         var userWord = RefreshUserWord(null, null);
-        var attemptСounter = RefreshAttemptsCount();
     </script> 
     <?php
 }
@@ -67,7 +66,7 @@ function RefreshUserWord(letter = null, positions = null)
 
 function ChArrayToString(array)
 {
-	return array.join(" ");
+	return array.join(' ');
 }
 
 function GetWord(currentId)
@@ -93,9 +92,10 @@ function GetWord(currentId)
 
 function IsWin()
 {
-    if (attemptСounter.NonWritable === 0 || IsAnswer())
+    var isAnswer = IsAnswer(currentContent['Id']);
+    if (GetAttempts(currentContent['Id']) === 0 || isAnswer)
     {
-        if (IsAnswer())
+        if (isAnswer)
         {
             document.getElementById('result').innerHTML = 'ПОБЕДА';
         }
@@ -113,6 +113,8 @@ function IsWin()
 
 function CheckLetter(buttonId, letter)
 {
+    DisableL(buttonId);
+
     var positions;
     $.ajax(
     {
@@ -138,21 +140,24 @@ function CheckLetter(buttonId, letter)
     }
     else
     {
-        MinusAttempt();
+        document.getElementById('attempts').innerHTML = GetAttempts(currentContent['Id']);
         document.getElementById('mess').innerHTML='нет буква ' + letter;
     }
 
-    document.getElementById(String(buttonId)).disabled = true;
-    document.getElementById(String(buttonId)).src = "images/content/Screen.JPG";
     IsWin();
+}
+
+function EnableL(buttonId)
+{
+    document.getElementById(buttonId).disabled = false;
+    document.getElementById(buttonId).src = "images/letters/" + buttonId + ".JPG";
 }
 
 function EnableLetters()
 {
 	for (let i = 1; i < 33; ++i)
 	{
-		document.getElementById(String(i)).disabled = false;
-        document.getElementById(String(i)).src = "images/letters/" + i + ".JPG";
+		EnableL(String(i));
 	}
 }
 
@@ -163,12 +168,17 @@ function EnableButtons()
     document.getElementById('update').src = "images/content/newword.JPG";
 }
 
+function DisableL(buttonId)
+{
+    document.getElementById(String(buttonId)).disabled = true;
+    document.getElementById(String(buttonId)).src = "images/content/Screen.JPG";
+}
+
 function DisableLetters()
 {
     for (let i = 1; i < 33; ++i)
     {
-        document.getElementById(String(i)).disabled = true;
-        document.getElementById(String(i)).src = "images/content/Screen.JPG";
+        DisableL(String(i));
     }
 }
 
@@ -179,14 +189,43 @@ function DisableButtons()
     document.getElementById('update').src = "images/content/Screen.JPG";
 }
 
-function IsAnswer()
+function IsAnswer(currentId)
 {
-    let i = 0;
+    var isAnswer;
+
+    var disabledLetters = new Array();
+    for (let i = 1; i < 33; ++i)
+    {
+        if (document.getElementById(String(i)).disabled === true)
+        {
+            disabledLetters.push(document.getElementById(String(i)).value);
+        }
+    }
+
+    $.ajax(
+    {
+        async: false,
+        type: "GET",
+        url: './API.php',
+        data: {isAnswer: " ", curId: currentId, disabledLetters: disabledLetters.join('')},
+        success: function(json)
+        {
+            isAnswer = JSON.parse(json);
+            if (typeof isAnswer === "string" && exceptions.includes(isAnswer))
+            {
+                window.location.replace(isAnswer + ".html");
+            }
+        }
+    });
+
+    return isAnswer;
+
+    /*let i = 0;
     while (userWord[i] != '*' && i < userWord.length)
     {
         ++i;
     }
-    return i === userWord.length;
+    return i === userWord.length;*/
 }
 
 function GetTip(currentId)
@@ -219,41 +258,47 @@ function Update()
 {
     currentContent = GetRandomContent(currentContent['Id']); 
     userWord = RefreshUserWord(null, null);
-    attemptСounter = RefreshAttemptsCount();
     document.getElementById('userword').innerHTML = ChArrayToString(userWord);
     document.getElementById('mess').innerHTML = "";	
+
     EnableButtons();
+    document.getElementById('attempts').innerHTML = GetAttempts(currentContent['Id']);
+
     document.getElementById('tip').innerHTML = 
         '<input type="image" src="images/content/tip.JPG" class="ttt" id="Tip" value="Tip" onclick="ShowTip()">';
-    document.getElementById('attempts').innerHTML = attemptСounter.NonWritable;
     document.getElementById('result').innerHTML = String(" ");
     document.getElementById('newGame').innerHTML = String(" ");
 }
 
-function MinusAttempt()
+function GetAttempts(currentId)
 {
-    var obj = { };
-    Object.defineProperty(obj, 'NonWritable', 
-        {
-            value: attemptСounter.NonWritable - 1,
-            writable : false,
-            enumerable : true,
-            configurable : false
-        });
-    attemptСounter = obj;
-    document.getElementById('attempts').innerHTML = attemptСounter.NonWritable;
-}
+    var attemptsCount;
 
-function RefreshAttemptsCount()
-{
-    var obj = { };
-    Object.defineProperty(obj, 'NonWritable', 
+    var disabledLetters = new Array();
+    for (let i = 1; i < 33; ++i)
+    {
+        if (document.getElementById(String(i)).disabled === true)
         {
-            value: 8,
-            writable : false,
-            enumerable : true,
-            configurable : false
-        });
-    return obj;
+            disabledLetters.push(document.getElementById(String(i)).value);
+        }
+    }
+
+    $.ajax(
+    {
+        async: false,
+        type: "GET",
+        url: './API.php',
+        data: {attempts: " ", curId: currentId, disabledLetters: disabledLetters.join('')},
+        success: function(json)
+        {
+            attemptsCount = JSON.parse(json);
+            if (typeof attemptsCount === "string" && exceptions.includes(attemptsCount))
+            {
+                window.location.replace(attemptsCount + ".html");
+            }
+        }
+    });
+
+    return attemptsCount;
 }
 </script>
